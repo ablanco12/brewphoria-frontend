@@ -7,7 +7,6 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -19,4 +18,36 @@
 
 .App-link {
   color: #09d3ac;
+}
+
+.paralax {
+  background-image: url("https://images.unsplash.com/photo-1436076863939-06870fe779c2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80");
+
+  height: 100%;
+
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.login-form {
+  position: relative;
+  z-index: 10;
+  color: rgb(72, 72, 72);
+}
+
+.login-input {
+  background-position: center;
+}
+
+.jumbotron {
+  opacity: 0.9;
+  margin-top: 10vh;
+  /* min-height: 44vh; */
+}
+
+.brand-logo {
+  font-family: Lobster;
+  font-size: 30px;
 }
