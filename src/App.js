@@ -4,16 +4,23 @@ import Home from "./components/Home";
 import SignUpPage from "./components/SignUpPage";
 import NavBar from "./components/NavBar";
 import UserProfile from "./components/UserProfile";
-import SearchResults from "./components/SearchResults";
+import BeerSearchResults from "./components/BeerSearchResults";
+import BrewerySearchResults from "./components/BrewerySearchResults";
+import BeerDetailsContainer from "./components/BeerDetailsContainer";
+import BreweryDetailsContainer from "./components/BreweryDetailsContainer";
 // import Image from 'react-bootstrap/Image'
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 class App extends React.Component {
   state = {
     beerData: [],
-    beerClicked: 0,
+    breweryData: [],
+    beerClicked: {},
+    beerReview: "",
+    breweryReview: "",
+    breweryClicked: {},
     accounts: {
       username: "",
       password: ""
@@ -28,6 +35,7 @@ class App extends React.Component {
   componentDidMount() {
     if (this.state.loggedin) {
       this.fetchBeers();
+      this.fetchBreweries();
     }
   }
 
@@ -35,12 +43,30 @@ class App extends React.Component {
     fetch("http://localhost:3000/beers")
       .then(resp => resp.json())
       .then(data => {
-        const filteredBeers = data.filter(beer =>
-          beer.name.includes(this.state.searchInput)
-        );
+        const lowercase = this.state.searchInput.toLowerCase();
+        const filteredBeers = data.filter(data => {
+          let beerName = data.name.toLowerCase();
+          // ----- add more search options -----
+          // let beerStyle = data.style.toLowerCase();
+          return beerName.includes(lowercase);
+        });
         this.setState({
           beerData: filteredBeers,
           loggedin: true
+        });
+      });
+  };
+  fetchBreweries = () => {
+    fetch("http://localhost:3000/breweries")
+      .then(resp => resp.json())
+      .then(breweryData => {
+        const lowercaseBrewery = this.state.searchInput.toLowerCase();
+        const filteredBreweries = breweryData.filter(brewery => {
+          let breweryName = brewery.name.toLowerCase();
+          return breweryName.includes(lowercaseBrewery);
+        });
+        this.setState({
+          breweryData: filteredBreweries
         });
       });
   };
@@ -124,6 +150,7 @@ class App extends React.Component {
       searchInput: input
     });
     this.fetchBeers();
+    this.fetchBreweries();
   };
 
   handleClickedBeer = beerID => {
@@ -137,52 +164,123 @@ class App extends React.Component {
       });
   };
 
+  handleClickedBrewery = breweryID => {
+    console.log("brewery Clicked", breweryID);
+    fetch(`http://localhost:3000/breweries/${breweryID}`)
+      .then(resp => resp.json())
+      .then(brewery => {
+        this.setState({
+          breweryClicked: brewery
+        });
+      });
+  };
+
+  handleReviewBeer = event => {
+    event.preventDefault();
+    this.setState({
+      beerReview: event.target.value
+    });
+    this.fetchPostReviews();
+  };
+
+  fetchPostReviews = () => {
+    fetch(`http://localhost:3000/reviews`, {
+      method: `POST`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        beerReview: ""
+      })
+    });
+  };
+
   render() {
     const { beerData, accounts, current_user } = this.state;
     return (
       <div className="App">
-        <NavBar searchNow={this.searchNow} />
-        <div className="paralax">
-          <header className="App-header">
-            <div className="login-form">
-              {/* <Image className="App-header-bg" src="https://images.photowall.com/products/45025.jpg?h=699&q=85" fluid /> */}
-              <Route
-                path="/home"
-                render={() => (
-                  <Home
-                    handleLoginChange={this.handleLoginChange}
-                    handleClick={this.handleClick}
-                    handleClickLogout={this.handleClickLogout}
-                    beerData={beerData}
-                    accounts={accounts}
-                    current_user={current_user}
-                    login={this.state.login}
-                  />
-                )}
-              />
-              <Route
-                path="/signup"
-                render={() => (
-                  <SignUpPage
-                    handleSubmit={this.handleSubmit}
-                    handleChange={this.handleChange}
-                    accounts={accounts}
-                  />
-                )}
-              />
-              <Route path="/profile" render={() => <UserProfile />} />
-              <Route
-                path="/search"
-                render={() => (
-                  <SearchResults
-                    beerData={this.state.beerData}
-                    handleClickedBeer={this.handleClickedBeer}
-                  />
-                )}
-              />
-            </div>
-          </header>
-        </div>
+        <NavBar />
+        <Switch>
+          <div className="paralax">
+            <header className="App-header">
+              <div className="login-form">
+                {/* <Image className="App-header-bg" src="https://images.photowall.com/products/45025.jpg?h=699&q=85" fluid /> */}
+                <Route
+                  path="/home"
+                  render={() => (
+                    <Home
+                      handleLoginChange={this.handleLoginChange}
+                      handleClick={this.handleClick}
+                      handleClickLogout={this.handleClickLogout}
+                      beerData={beerData}
+                      accounts={accounts}
+                      current_user={current_user}
+                      login={this.state.login}
+                    />
+                  )}
+                />
+                <Route
+                  path="/signup"
+                  render={() => (
+                    <SignUpPage
+                      handleSubmit={this.handleSubmit}
+                      handleChange={this.handleChange}
+                      accounts={accounts}
+                    />
+                  )}
+                />
+                <Route path="/profile" render={() => <UserProfile />} />
+                <Route
+                  path="/searchBeers"
+                  render={() => (
+                    <BeerSearchResults
+                      searchNow={this.searchNow}
+                      beerData={this.state.beerData}
+                      beerClicked={this.state.beerClicked}
+                      handleClickedBeer={this.handleClickedBeer}
+                      breweryData={this.state.breweryData}
+                      breweryClicked={this.state.breweryClicked}
+                      handleClickedBrewery={this.handleClickedBrewery}
+                    />
+                  )}
+                />
+                <Route
+                  path="/searchBreweries"
+                  render={() => (
+                    <BrewerySearchResults
+                      searchNow={this.searchNow}
+                      beerData={this.state.beerData}
+                      beerClicked={this.state.beerClicked}
+                      handleClickedBeer={this.handleClickedBeer}
+                      breweryData={this.state.breweryData}
+                      breweryClicked={this.state.breweryClicked}
+                      handleClickedBrewery={this.handleClickedBrewery}
+                    />
+                  )}
+                />
+                <Route
+                  path="/beer"
+                  render={() => (
+                    <BeerDetailsContainer
+                      beerReview={this.state.beerReview}
+                      handleReviewBeer={this.handleReviewBeer}
+                      beerClicked={this.state.beerClicked}
+                    />
+                  )}
+                />
+                <Route
+                  path="/brewery"
+                  render={() => (
+                    <BreweryDetailsContainer
+                      breweryClicked={this.state.breweryClicked}
+                    />
+                  )}
+                />
+              </div>
+            </header>
+          </div>
+        </Switch>
       </div>
     );
   }

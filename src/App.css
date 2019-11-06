@@ -32,7 +32,6 @@
 }
 
 .login-form {
-  position: relative;
   z-index: 10;
   color: rgb(72, 72, 72);
 }
@@ -44,10 +43,64 @@
 .jumbotron {
   opacity: 0.9;
   margin-top: 10vh;
+  font-family: Questrial;
   /* min-height: 44vh; */
+}
+
+tr:hover {
+  opacity: 0.5;
+  color: #e25a00;
+  cursor: pointer;
 }
 
 .brand-logo {
   font-family: Lobster;
   font-size: 30px;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #e25a00;
+  border-color: #fff;
+  margin-top: 250px;
+}
+
+.beerTitle {
+  font-family: Lobster;
+  font-size: 65px;
+}
+.breweryTitle {
+  font-family: Lobster;
+  font-size: 65px;
+}
+
+.cheers-btn {
+  background-color: #e25a00;
+  border-radius: 50px;
+}
+
+.beerStyle {
+  font-family: Lobster;
+}
+
+* {
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* SIDEBAR */
+.master-detail-element {
+  float: left;
+  margin: 10px 0px;
+  padding: 20px;
+  border: 2px dashed grey;
+}
+
+.sidebar {
+  width: 25%;
+  overflow: scroll;
+}
+
+.beer30 {
+  color: gray;
 }

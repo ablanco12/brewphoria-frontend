@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import UserInfo from "./UserInfo";
 
 class UserProfile extends Component {
   state = {};
@@ -6,10 +7,11 @@ class UserProfile extends Component {
     return (
       <div>
         <div className="jumbotron">
-          <h1>this is your user profile</h1>
-          <h2>HELLO USER</h2>
-          <h1># of BEERS TRIED</h1>
-          <h1># of BEERS REVIEWED</h1>
+          <UserInfo />
+        </div>
+        <div className="jumbotron">
+          <h1>BEERS ></h1>
+
           <h1>AVERAGE RATING OF ALL BEERS TRIED</h1>
         </div>
       </div>
