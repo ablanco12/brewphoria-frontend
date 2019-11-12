@@ -16,9 +16,7 @@ class Home extends Component {
   render() {
     return (
       <div>
-        {!this.state.showLogin && (
-          <Button onClick={this.loginForm}>LOGiN or SiGNUP</Button>
-        )}
+        <div>{!this.state.showLogin && <Logo />}</div>
         <br />
         {this.state.showLogin && (
           <div className="login-form">
@@ -43,7 +41,13 @@ class Home extends Component {
 
                 <Form.Group controlId="formBasicPassword">
                   <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" placeholder="Password" />
+                  <Form.Control
+                    name="password"
+                    type="password"
+                    placeholder="Password"
+                    value={this.props.login.password}
+                    onChange={this.props.handleLoginChange}
+                  />
                 </Form.Group>
 
                 <Button variant="dark" onClick={this.props.handleClick}>
@@ -56,7 +60,14 @@ class Home extends Component {
             </div>
           </div>
         )}
-        <div>{!this.state.showLogin && <Logo />}</div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        {!this.state.showLogin && (
+          <Button onClick={this.loginForm}>LOGiN or SiGNUP</Button>
+        )}
       </div>
     );
   }

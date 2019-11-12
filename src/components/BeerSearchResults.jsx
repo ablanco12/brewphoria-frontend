@@ -11,59 +11,61 @@ class BeerSearchResults extends Component {
   render() {
     const allBeers = this.props.beerData;
 
-    console.log(this.props.beerClicked);
-
     return (
       <Container>
         <Row className="justify-content-lg-center">
-          <Col lg={7}>
-            <div className="jumbotron">
+          <div className="jumbotron">
+            <Col lg={12}>
               <h2 className="beerTitle">Beers</h2>
-              <Form inline>
-                <FormControl
-                  type="text"
-                  placeholder="Find Beer"
-                  onChange={event => this.props.searchNow(event.target.value)}
-                  className="beer-search mr-md-4"
-                />
-                <Button variant="outline-success">Search</Button>
-              </Form>
-              <table className="ui celled striped padded table">
-                <tbody>
-                  <tr>
-                    <th>
-                      <h3 className="ui center aligned header">Brand</h3>
-                    </th>
-                    <th>
-                      <h3 className="ui center aligned header">Style</h3>
-                    </th>
-                    <th>
-                      <h3 className="ui center aligned header">ABV</h3>
-                    </th>
-                    <th>
-                      <h3 className="ui center aligned header">IBU</h3>
-                    </th>
-                  </tr>
-
-                  {allBeers.map(beer => (
-                    <tr
-                      key={beer.id}
-                      beer={beer}
-                      onClick={() => this.props.handleClickedBeer(beer.id)}
-                    >
-                      <td>
-                        <Link to={`/beer/${beer.id}`}>{beer.name}</Link>
-                      </td>
-
-                      <td>{beer.style}</td>
-                      <td>{beer.abv}</td>
-                      <td>{beer.description}</td>
+              <div>
+                <Form inline>
+                  <FormControl
+                    type="text"
+                    placeholder="Find Beer"
+                    onChange={event => this.props.searchNow(event.target.value)}
+                    className="beer-search mr-lg-8"
+                  />
+                  <Button type="submit">Search</Button>
+                </Form>
+              </div>
+              {this.props.showTable && (
+                <table className="ui celled striped padded table">
+                  <tbody>
+                    <tr>
+                      <th>
+                        <h3 className="ui center aligned header">Brand</h3>
+                      </th>
+                      <th>
+                        <h3 className="ui center aligned header">Style</h3>
+                      </th>
+                      <th>
+                        <h3 className="ui center aligned header">ABV</h3>
+                      </th>
+                      <th>
+                        <h3 className="ui center aligned header">IBU</h3>
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Col>
+
+                    {allBeers.map(beer => (
+                      <tr
+                        key={beer.id}
+                        beer={beer}
+                        onClick={() => this.props.handleClickedBeer(beer.id)}
+                      >
+                        <td>
+                          <Link to={`/beer/${beer.id}`}>{beer.name}</Link>
+                        </td>
+
+                        <td>{beer.style}</td>
+                        <td>{beer.abv}</td>
+                        <td>{beer.description}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </Col>
+          </div>
         </Row>
       </Container>
     );

@@ -9,33 +9,42 @@ import BrewerySearchResults from "./components/BrewerySearchResults";
 import BeerDetailsContainer from "./components/BeerDetailsContainer";
 import BreweryDetailsContainer from "./components/BreweryDetailsContainer";
 // import Image from 'react-bootstrap/Image'
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
+import Modal from "react-responsive-modal";
+import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 class App extends React.Component {
   state = {
     beerData: [],
+    showTable: false,
     breweryData: [],
-    beerClicked: {},
-    beerReview: "",
+    beerClicked: [],
+    cheered: [],
+    reviewData: [],
+    open: false,
+    rating: 0,
     breweryReview: "",
     breweryClicked: {},
     accounts: {
       username: "",
-      password: ""
+      password: "",
+      password_confirmation: ""
     },
     login: {
       username: "",
       password: ""
     },
-    loggedin: true,
+    loggedin: false,
     searchInput: ""
   };
   componentDidMount() {
     if (this.state.loggedin) {
       this.fetchBeers();
       this.fetchBreweries();
+      // this.fetchBeersTried();
+      console.log(this.state.cheered);
     }
   }
 
@@ -56,6 +65,7 @@ class App extends React.Component {
         });
       });
   };
+
   fetchBreweries = () => {
     fetch("http://localhost:3000/breweries")
       .then(resp => resp.json())
@@ -84,19 +94,21 @@ class App extends React.Component {
       body: JSON.stringify({
         user: {
           username: accounts.username,
-
-          password: accounts.password
+          password: accounts.password,
+          password_confirmation: accounts.password_confirmation
         }
       })
     })
-      .then(r => r.json())
-      .then(r => console.log("successfully created an account", r));
+      .then(resp => resp.json())
+      .then(resp => {
+        this.onOpenModal();
+      });
   };
 
   handleClick = event => {
     // console.log("login", this.state.login);
     // console.log("thiis hits", event);
-    // event.preventDefault();
+    event.preventDefault();
     const configObj = {
       method: "POST",
       headers: {
@@ -115,7 +127,9 @@ class App extends React.Component {
       .then(json => {
         // this.props.history.push("/home");
         window.localStorage.setItem("token", json.jwt);
-        window.localStorage.setItem("username", json.username);
+        window.localStorage.setItem("username", json.user.username);
+        window.localStorage.setItem("user_id", json.user.id);
+
         console.log("fetching after loggin in", json);
         this.setState({
           current_user: json.username,
@@ -125,8 +139,18 @@ class App extends React.Component {
           },
           loggedin: true
         });
+        this.props.history.push("/profile");
       });
   };
+
+  onOpenModal = () => {
+    this.setState({ open: true });
+  };
+
+  onCloseModal = () => {
+    this.setState({ open: false });
+  };
+
   handleChange = event => {
     const accounts = { ...this.state.accounts };
     accounts[event.currentTarget.name] = event.currentTarget.value;
@@ -142,19 +166,23 @@ class App extends React.Component {
   handleClickLogout = event => {
     event.preventDefault();
     localStorage.clear();
+    this.setState({
+      loggedin: false
+    });
     this.props.history.push("/home");
   };
 
   searchNow = input => {
     this.setState({
-      searchInput: input
+      searchInput: input,
+      showTable: true
     });
     this.fetchBeers();
     this.fetchBreweries();
   };
 
   handleClickedBeer = beerID => {
-    console.log("beer Clicked", beerID);
+    // console.log("beer Clicked", beerID);
     fetch(`http://localhost:3000/beers/${beerID}`)
       .then(resp => resp.json())
       .then(beer => {
@@ -165,7 +193,7 @@ class App extends React.Component {
   };
 
   handleClickedBrewery = breweryID => {
-    console.log("brewery Clicked", breweryID);
+    // console.log("brewery Clicked", breweryID);
     fetch(`http://localhost:3000/breweries/${breweryID}`)
       .then(resp => resp.json())
       .then(brewery => {
@@ -178,29 +206,95 @@ class App extends React.Component {
   handleReviewBeer = event => {
     event.preventDefault();
     this.setState({
-      beerReview: event.target.value
+      beerContent: event.target.value
     });
-    this.fetchPostReviews();
   };
 
-  fetchPostReviews = () => {
-    fetch(`http://localhost:3000/reviews`, {
-      method: `POST`,
+  fetchPostReviews = event => {
+    event.preventDefault();
+    const currentUser = localStorage.getItem("user_id");
+    const configObj = {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Authorization: "Bearer " + localStorage.getItem("token")
       },
       body: JSON.stringify({
-        beerReview: ""
+        review: {
+          rating: this.state.rating,
+          beer_id: this.state.beerClicked.id,
+          content: this.state.beerContent,
+          user_id: currentUser
+        }
       })
-    });
+    };
+    fetch("http://localhost:3000/reviews", configObj)
+      .then(resp => resp.json())
+      .then(review => {
+        fetch(`http://localhost:3000/beers/${this.state.beerClicked.id}`)
+          .then(resp => resp.json())
+          .then(beer => {
+            // console.log(beer);
+            // console.log(review);
+            this.setState({
+              beerClicked: beer
+            });
+          });
+        this.fetchBeersTried();
+      });
+  };
+
+  fetchBeersTried = () => {
+    fetch("http://localhost:3000/reviews")
+      .then(resp => resp.json())
+      .then(review => {
+        this.setState({
+          cheered: review
+        });
+      });
+  };
+
+  onStarClick = nextValue => {
+    console.log("RATED", nextValue);
+    this.setState({ rating: nextValue });
+  };
+
+  // CHEERS
+  handleCheers = cheers => {
+    console.log("cheers", cheers);
+    const currentUser = localStorage.getItem("user_id");
+    const postObj = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        tried_beer: {
+          user_id: currentUser,
+          beer_id: this.state.beerClicked.id
+        }
+      })
+    };
+    fetch("http://localhost:3000/tried_beers", postObj)
+      .then(resp => resp.json())
+      .then(cheers => {
+        this.setState({
+          cheered: cheers
+        });
+      });
   };
 
   render() {
     const { beerData, accounts, current_user } = this.state;
+    const { open } = this.state;
     return (
       <div className="App">
-        <NavBar />
+        <NavBar
+          handleClickLogout={this.handleClickLogout}
+          loggedin={this.state.loggedin}
+        />
         <Switch>
           <div className="paralax">
             <header className="App-header">
@@ -212,7 +306,6 @@ class App extends React.Component {
                     <Home
                       handleLoginChange={this.handleLoginChange}
                       handleClick={this.handleClick}
-                      handleClickLogout={this.handleClickLogout}
                       beerData={beerData}
                       accounts={accounts}
                       current_user={current_user}
@@ -220,6 +313,7 @@ class App extends React.Component {
                     />
                   )}
                 />
+
                 <Route
                   path="/signup"
                   render={() => (
@@ -230,17 +324,40 @@ class App extends React.Component {
                     />
                   )}
                 />
-                <Route path="/profile" render={() => <UserProfile />} />
+                <div>
+                  {/* <button onClick={this.onOpenModal}>Open modal</button> */}
+                  <Modal open={open} onClose={this.onCloseModal} center>
+                    <h2>
+                      Great! <br />
+                      You've Successfully Created an Account! <br />
+                      <Button href="/home" color="orange">
+                        LOG IN
+                      </Button>
+                    </h2>
+                  </Modal>
+                </div>
+                {/* return the amount of beers that have been reviewed/tried */}
+                <Route
+                  path="/profile"
+                  render={() => (
+                    <UserProfile
+                      cheered={this.state.cheered}
+                      beerClicked={this.state.beerClicked}
+                    />
+                  )}
+                />
                 <Route
                   path="/searchBeers"
                   render={() => (
                     <BeerSearchResults
                       searchNow={this.searchNow}
+                      showTable={this.state.showTable}
                       beerData={this.state.beerData}
                       beerClicked={this.state.beerClicked}
                       handleClickedBeer={this.handleClickedBeer}
                       breweryData={this.state.breweryData}
                       breweryClicked={this.state.breweryClicked}
+                      beerReviews={this.state.beerReviews}
                       handleClickedBrewery={this.handleClickedBrewery}
                     />
                   )}
@@ -263,9 +380,14 @@ class App extends React.Component {
                   path="/beer"
                   render={() => (
                     <BeerDetailsContainer
-                      beerReview={this.state.beerReview}
                       handleReviewBeer={this.handleReviewBeer}
+                      fetchPostReviews={this.fetchPostReviews}
                       beerClicked={this.state.beerClicked}
+                      beerReview={this.state.beerReviews}
+                      rating={this.state.rating}
+                      onStarClick={this.onStarClick}
+                      handleCheers={this.handleCheers}
+                      cheered={this.state.cheered}
                     />
                   )}
                 />
@@ -286,4 +408,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withRouter(App);

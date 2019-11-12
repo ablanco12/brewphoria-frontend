@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 class NavBar extends Component {
   state = {};
@@ -11,27 +12,43 @@ class NavBar extends Component {
           <Navbar.Brand className="brand-logo" href="/home">
             BrewPhoria
           </Navbar.Brand>
+
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="/home">Home</Nav.Link>
-              <Nav.Link href="/profile">Your Profile</Nav.Link>
-              <NavDropdown title="Beers & Breweries" id="basic-nav-dropdown">
-                <NavDropdown.Item href="/searchBeers">
-                  All Beers
-                </NavDropdown.Item>
-                <NavDropdown.Item href="/searchBreweries">
-                  All Breweries
-                </NavDropdown.Item>
-                {/* <NavDropdown.Item href="#action/3.3">
-                  Something
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  Separated link
-                </NavDropdown.Item> */}
-              </NavDropdown>
+              {this.props.loggedin && (
+                <Link
+                  href="/profile"
+                  // onClick={event => this.props.fetchBeersTried(event)}
+                >
+                  Your Profile
+                </Link>
+              )}
+              <br />
+              {this.props.loggedin && (
+                <NavDropdown title="Beers & Breweries" id="basic-nav-dropdown">
+                  <NavDropdown.Item href="/searchBeers">
+                    All Beers
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/searchBreweries">
+                    All Breweries
+                  </NavDropdown.Item>
+                </NavDropdown>
+              )}
+              {!this.props.loggedin && <Link to="/home">Login</Link>}
             </Nav>
+
+            {this.props.loggedin && (
+              <Button onClick={this.props.handleClickLogout}>Logout</Button>
+            )}
+            {this.props.loggedin ? (
+              <div className="brand-logo">
+                {" "}
+                logged in as: {localStorage.getItem("username")}
+              </div>
+            ) : (
+              <div className="please-login">please log in </div>
+            )}
           </Navbar.Collapse>
         </Navbar>
       </div>

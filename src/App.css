@@ -43,8 +43,12 @@
 .jumbotron {
   opacity: 0.9;
   margin-top: 10vh;
+
   font-family: Questrial;
-  /* min-height: 44vh; */
+  /* min-height: 400px;
+  min-width: 570px; */
+  /* max-height: 10000px;
+  max-width: 570px; */
 }
 
 tr:hover {
@@ -58,11 +62,16 @@ tr:hover {
   font-size: 30px;
 }
 
+.please-login {
+  font-family: Lobster Two;
+  font-size: 25px;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #e25a00;
   border-color: #fff;
-  margin-top: 250px;
+  /* margin-top: 250px; */
 }
 
 .beerTitle {
@@ -83,7 +92,7 @@ tr:hover {
   font-family: Lobster;
 }
 
-* {
+*:hover {
   box-sizing: border-box;
   text-align: center;
 }
@@ -103,4 +112,18 @@ tr:hover {
 
 .beer30 {
   color: gray;
+}
+
+.image-preview {
+  border-style: double;
+  border-radius: 600px;
+}
+
+img {
+  height: 400px;
+  width: 250px;
+}
+
+.reviews {
+  border-style: solid;
 }

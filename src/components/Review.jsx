@@ -1,48 +1,54 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import StarRatingComponent from "react-star-rating-component";
 
 class Review extends Component {
-  state = {
-    review: false,
-    beerReview: ""
-  };
+  state = {};
 
-  handleAddReview = input => {
-    console.log(input);
-    this.setState({
-      beerReview: input,
-      review: true
-    });
-  };
   render() {
-    console.log(this.props);
+    const reviews = this.props.beer.reviews ? this.props.beer.reviews : [];
+    // console.log(reviews);
+    const username = localStorage.getItem("username");
+    const reviewMapped =
+      reviews.length > 0 ? (
+        reviews.map(b => (
+          <div className="reviews" key={b.id}>
+            <h5>{username}</h5>
+            {b.content}
+            <br />
+            Rated: {b.rating} stars
+          </div>
+        ))
+      ) : (
+        <h1> you haven't reviewed this beer yet!</h1>
+      );
+
+    const { rating } = this.props.rating;
     return (
       <div>
-        <Form>
+        <StarRatingComponent
+          name="rate1"
+          starCount={5}
+          value={rating}
+          onStarClick={this.props.onStarClick.bind(this)}
+        />
+        <Form onSubmit={this.props.fetchPostReviews}>
           <FormGroup>
             <Label for="review">Leave a Review!</Label>
             <Input
               type="textarea"
               name="text"
               id="text"
-              value={this.props.beerReview}
               onChange={event => this.props.handleReviewBeer(event)}
             />
           </FormGroup>
-          <Button onClick={() => this.handleAddReview(this.props.beerReview)}>
-            Submit
-          </Button>
+          <Button>Submit</Button>
         </Form>
-        <Button>
-          <Link to={`/searchBeers`}>Go Back</Link>
-        </Button>
+        <Link to={`/searchBeers`}>Go Back</Link>
         <br />
-        {this.state.review && (
-          <ul>
-            <li>{this.state.beerReview}</li>
-          </ul>
-        )}
+        <Link to={`/profile`}>Go to your profile</Link>
+        <div className="reviews">{reviewMapped}</div>
       </div>
     );
   }
