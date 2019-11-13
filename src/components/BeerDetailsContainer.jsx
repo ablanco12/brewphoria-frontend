@@ -9,8 +9,8 @@ class BeerDetailsContainer extends Component {
   state = {};
   render() {
     const beer = this.props.beerClicked;
-    // const text = this.props.cheered ? "cheered" : "haven't cheered";
-    // const label = this.props.cheered ? "CHEERED! 🍻" : "CHEERS! 🍺";
+    const text = this.props.cheered ? "cheered" : "haven't cheered";
+    const label = this.props.cheered ? "CHEERED! 🍻" : "CHEERS! 🍺";
 
     return (
       <Container>
@@ -22,13 +22,13 @@ class BeerDetailsContainer extends Component {
               <img src={beer.image_url} alt="oh no" />
               <br />
 
-              {/* <button
+              <button
                 className="cheers-btn"
                 onClick={() => this.props.handleCheers(beer)}
               >
                 {label}
               </button>
-              <h6>you {text} this. Click to toggle.</h6> */}
+              <h6>you {text} this. Click to toggle.</h6>
             </Col>
 
             <Col>

@@ -22,7 +22,6 @@ class App extends React.Component {
     breweryData: [],
     beerClicked: [],
     cheered: [],
-    reviewData: [],
     open: false,
     rating: 0,
     breweryReview: "",
@@ -43,6 +42,7 @@ class App extends React.Component {
     if (this.state.loggedin) {
       this.fetchBeers();
       this.fetchBreweries();
+
       // this.fetchBeersTried();
       console.log(this.state.cheered);
     }
@@ -213,6 +213,7 @@ class App extends React.Component {
   fetchPostReviews = event => {
     event.preventDefault();
     const currentUser = localStorage.getItem("user_id");
+    const currentUsername = localStorage.getItem("username")
     const configObj = {
       method: "POST",
       headers: {
@@ -224,7 +225,8 @@ class App extends React.Component {
           rating: this.state.rating,
           beer_id: this.state.beerClicked.id,
           content: this.state.beerContent,
-          user_id: currentUser
+          user_id: currentUser,
+          username: currentUsername
         }
       })
     };
@@ -280,9 +282,10 @@ class App extends React.Component {
     fetch("http://localhost:3000/tried_beers", postObj)
       .then(resp => resp.json())
       .then(cheers => {
-        this.setState({
-          cheered: cheers
-        });
+        console.log(cheers);
+        // this.setState({
+        //   cheered: cheers
+        // });
       });
   };
 

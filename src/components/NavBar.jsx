@@ -16,14 +16,6 @@ class NavBar extends Component {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              {this.props.loggedin && (
-                <Link
-                  href="/profile"
-                  // onClick={event => this.props.fetchBeersTried(event)}
-                >
-                  Your Profile
-                </Link>
-              )}
               <br />
               {this.props.loggedin && (
                 <NavDropdown title="Beers & Breweries" id="basic-nav-dropdown">
@@ -36,6 +28,16 @@ class NavBar extends Component {
                 </NavDropdown>
               )}
               {!this.props.loggedin && <Link to="/home">Login</Link>}
+              <br />
+              {this.props.loggedin && (
+                <Link
+                  to="/profile"
+                  className="link"
+                  // onClick={event => this.props.fetchBeersTried(event)}
+                >
+                  Your Profile
+                </Link>
+              )}
             </Nav>
 
             {this.props.loggedin && (

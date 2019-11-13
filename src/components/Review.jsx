@@ -4,25 +4,29 @@ import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import StarRatingComponent from "react-star-rating-component";
 
 class Review extends Component {
-  state = {};
+  state = {
+    usersData: {}
+  };
+  componentDidMount() {
+    this.fetchCurrentUser();
+  }
 
+  fetchCurrentUser = () => {
+    fetch(
+      `http://localhost:3000/api/v1/users/${localStorage.getItem("user_id")}`
+    )
+      .then(resp => resp.json())
+      .then(user => {
+        console.log("one user", user);
+        this.setState({
+          usersData: user
+        });
+      });
+  };
   render() {
     const reviews = this.props.beer.reviews ? this.props.beer.reviews : [];
-    // console.log(reviews);
-    const username = localStorage.getItem("username");
-    const reviewMapped =
-      reviews.length > 0 ? (
-        reviews.map(b => (
-          <div className="reviews" key={b.id}>
-            <h5>{username}</h5>
-            {b.content}
-            <br />
-            Rated: {b.rating} stars
-          </div>
-        ))
-      ) : (
-        <h1> you haven't reviewed this beer yet!</h1>
-      );
+    console.log(reviews);
+    console.log(this.props.beer);
 
     const { rating } = this.props.rating;
     return (
@@ -48,7 +52,16 @@ class Review extends Component {
         <Link to={`/searchBeers`}>Go Back</Link>
         <br />
         <Link to={`/profile`}>Go to your profile</Link>
-        <div className="reviews">{reviewMapped}</div>
+        <div className="reviews">
+          {reviews &&
+            reviews.map(b => (
+              <div>
+                <b>{b.username}</b>:{b.content}
+                <br />
+                Rated: {b.rating}
+              </div>
+            ))}
+        </div>
       </div>
     );
   }

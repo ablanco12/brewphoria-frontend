@@ -3,25 +3,31 @@ import { Link } from "react-router-dom";
 import ImageUpload from "./ImageUploadComponent";
 
 class UserProfile extends Component {
-  state = {};
+  state = {
+    usersData: {}
+  };
+  componentDidMount() {
+    this.fetchCurrentUser();
+  }
+
+  fetchCurrentUser = () => {
+    fetch(
+      `http://localhost:3000/api/v1/users/${localStorage.getItem("user_id")}`
+    )
+      .then(resp => resp.json())
+      .then(user => {
+        console.log("one user", user);
+        this.setState({
+          usersData: user
+        });
+      });
+  };
   render() {
-    const allBeersTried = this.props.cheered;
+    console.log(this.state.usersData);
+    // const allBeersTried = this.props.cheered
     // console.log(this.props);
     const username = localStorage.getItem("username");
-    const reviewsMapped =
-      allBeersTried.length > 0 ? (
-        allBeersTried.map(b => (
-          <li key={b.id}>
-            <img src="..." class="mr-3" alt="..." />
-            {b.content}
-            <br />
-            Rated: {b.rating} stars
-          </li>
-        ))
-      ) : (
-        <h1> you haven't reviewed or tried any beers yet!</h1>
-      );
-    console.log(allBeersTried);
+
     return (
       <div>
         <div className="jumbotron">
@@ -31,7 +37,9 @@ class UserProfile extends Component {
 
             <div>
               <h1>beers tried</h1>
-              <h1>{allBeersTried.length}</h1>
+              {this.state.usersData.reviews && (
+                <h1>{this.state.usersData.reviews.length}</h1>
+              )}
             </div>
           </div>
           <Link to="/searchBeers">all beers</Link>
@@ -40,10 +48,18 @@ class UserProfile extends Component {
         </div>
         <div className="jumbotron">
           <h1>ALL BEERS TRIED</h1>
-          <div class="media">
+          <div className="media">
             <div className="media-body">
               <h5 className="mt-0">beers you've reviewed..</h5>
-              {reviewsMapped}
+              {this.state.usersData.reviews &&
+                this.state.usersData.reviews.map(b => (
+                  <div className="reviews" key={b.id}>
+                    <h5>{this.state.usersData.username}</h5>
+                    {b.content}
+                    <br />
+                    Rated: {b.rating} stars
+                  </div>
+                ))}
             </div>
           </div>
         </div>
