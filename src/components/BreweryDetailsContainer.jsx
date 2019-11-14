@@ -17,15 +17,9 @@ class BreweryDetailsContainer extends Component {
             <div className="jumbotron">
               <h1 className="beerTitle">{brewery.name}</h1>
               <br />
-              <img
-                src={brewery.image_url}
-                alt="oh no"
-                width="100%"
-                height="100%"
-              />
+              <img className="brewery" src={brewery.image_url} alt="oh no" />
               <br />
               <br />
-              <button className="cheers-btn">CHEERS!</button>
             </div>
             <div>
               {/* {this.props.beerData.map(beer => {
@@ -44,9 +38,8 @@ class BreweryDetailsContainer extends Component {
                 </FormGroup>
                 <Button>Submit</Button>
               </Form>
-              <Button>
-                <Link to={`/searchBreweries`}>Go Back</Link>
-              </Button>
+
+              <Link to={`/searchBreweries`}>Go Back</Link>
             </div>
           </Col>
         </Row>

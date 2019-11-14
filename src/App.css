@@ -62,6 +62,11 @@ tr:hover {
   font-size: 30px;
 }
 
+.brand-logo1 {
+  font-family: Lobster;
+  font-size: 20px;
+}
+
 .please-login {
   font-family: Lobster Two;
   font-size: 25px;
@@ -92,7 +97,7 @@ tr:hover {
   font-family: Lobster;
 }
 
-*:hover {
+* {
   box-sizing: border-box;
   text-align: center;
 }
@@ -119,11 +124,22 @@ tr:hover {
   border-radius: 600px;
 }
 
-img {
+img.brewery {
   height: 400px;
-  width: 250px;
+  width: 400px;
+  border-radius: 30px;
 }
 
-.reviews {
-  border-style: solid;
+img.beer {
+  height: 450px;
+  width: 275px;
+  border-radius: 30px;
+}
+
+.beer-name {
+  font-family: Lobster Two;
+}
+
+.profile-image {
+  height: 350px;
 }

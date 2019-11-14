@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import StarRatingComponent from "react-star-rating-component";
+import Media from "react-bootstrap/Media";
 
 class Review extends Component {
   state = {
@@ -52,16 +53,17 @@ class Review extends Component {
         <Link to={`/searchBeers`}>Go Back</Link>
         <br />
         <Link to={`/profile`}>Go to your profile</Link>
-        <div className="reviews">
-          {reviews &&
-            reviews.map(b => (
-              <div>
-                <b>{b.username}</b>:{b.content}
-                <br />
-                Rated: {b.rating}
-              </div>
-            ))}
-        </div>
+        <Media>
+          <Media.Body>
+            {reviews &&
+              reviews.map(b => (
+                <div key={b.id}>
+                  <b>{b.username}</b>:<h5>{b.content}</h5>
+                  Rated: {b.rating}
+                </div>
+              ))}
+          </Media.Body>
+        </Media>
       </div>
     );
   }

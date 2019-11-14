@@ -28,28 +28,27 @@ class NavBar extends Component {
                 </NavDropdown>
               )}
               {!this.props.loggedin && <Link to="/home">Login</Link>}
-              <br />
+
               {this.props.loggedin && (
-                <Link
-                  to="/profile"
+                <Nav.Link
+                  href="/profile"
                   className="link"
                   // onClick={event => this.props.fetchBeersTried(event)}
                 >
                   Your Profile
-                </Link>
+                </Nav.Link>
               )}
             </Nav>
 
-            {this.props.loggedin && (
-              <Button onClick={this.props.handleClickLogout}>Logout</Button>
-            )}
             {this.props.loggedin ? (
-              <div className="brand-logo">
-                {" "}
+              <div className="brand-logo1">
                 logged in as: {localStorage.getItem("username")}
               </div>
             ) : (
               <div className="please-login">please log in </div>
+            )}
+            {this.props.loggedin && (
+              <Button onClick={this.props.handleClickLogout}>Logout</Button>
             )}
           </Navbar.Collapse>
         </Navbar>

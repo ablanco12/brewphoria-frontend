@@ -48,6 +48,16 @@ class SignUpPage extends Component {
                 value={accounts.password_confirmation}
               />
             </Form.Group>
+            <Form.Group>
+              <Form.Label>Upload a Profile Photo</Form.Label>
+              <Form.Control
+                type="file"
+                name="avatar"
+                id="avatar"
+                placeholder="Upload Photo"
+                onChange={this.props.fileHandler}
+              />
+            </Form.Group>
             <Button type="submit" color="dark">
               Create Account
             </Button>

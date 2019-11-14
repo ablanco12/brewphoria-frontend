@@ -18,7 +18,7 @@ import "./App.css";
 class App extends React.Component {
   state = {
     beerData: [],
-    showTable: false,
+    showTable: true,
     breweryData: [],
     beerClicked: [],
     cheered: [],
@@ -36,16 +36,12 @@ class App extends React.Component {
       password: ""
     },
     loggedin: false,
-    searchInput: ""
+    searchInput: "",
+    avatar: []
   };
   componentDidMount() {
-    if (this.state.loggedin) {
-      this.fetchBeers();
-      this.fetchBreweries();
-
-      // this.fetchBeersTried();
-      console.log(this.state.cheered);
-    }
+    this.fetchBeers();
+    this.fetchBreweries();
   }
 
   fetchBeers = () => {
@@ -59,6 +55,7 @@ class App extends React.Component {
           // let beerStyle = data.style.toLowerCase();
           return beerName.includes(lowercase);
         });
+        console.log(filteredBeers);
         this.setState({
           beerData: filteredBeers,
           loggedin: true
@@ -81,23 +78,38 @@ class App extends React.Component {
       });
   };
 
+  // Avatar Handler
+
+  fileHandler = event => {
+    console.log(event.target);
+    this.setState({
+      avatar: event.target.files[0]
+    });
+  };
+
+  // Create a User Handler
+
   handleSubmit = event => {
     event.preventDefault();
+    const formData = new FormData();
+    const currentAvatar = this.state.avatar;
     const { accounts } = this.state;
+    const username = accounts.username;
+    const password = accounts.password;
+    const cPassword = accounts.password_confirmation;
+
+    formData.append("avatar", currentAvatar);
+    formData.append("username", username);
+    formData.append("password", password);
+    formData.append("password_confirmation", cPassword);
+
     // console.log("this is the stuff you have on form", event);
     fetch("http://localhost:3000/api/v1/users", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
+        Authorization: "Bearer"
       },
-      body: JSON.stringify({
-        user: {
-          username: accounts.username,
-          password: accounts.password,
-          password_confirmation: accounts.password_confirmation
-        }
-      })
+      body: formData
     })
       .then(resp => resp.json())
       .then(resp => {
@@ -174,8 +186,7 @@ class App extends React.Component {
 
   searchNow = input => {
     this.setState({
-      searchInput: input,
-      showTable: true
+      searchInput: input
     });
     this.fetchBeers();
     this.fetchBreweries();
@@ -213,7 +224,7 @@ class App extends React.Component {
   fetchPostReviews = event => {
     event.preventDefault();
     const currentUser = localStorage.getItem("user_id");
-    const currentUsername = localStorage.getItem("username")
+    const currentUsername = localStorage.getItem("username");
     const configObj = {
       method: "POST",
       headers: {
@@ -237,12 +248,12 @@ class App extends React.Component {
           .then(resp => resp.json())
           .then(beer => {
             // console.log(beer);
-            // console.log(review);
+            console.log(review);
             this.setState({
               beerClicked: beer
             });
           });
-        this.fetchBeersTried();
+        // this.fetchBeersTried();
       });
   };
 
@@ -262,36 +273,37 @@ class App extends React.Component {
   };
 
   // CHEERS
-  handleCheers = cheers => {
-    console.log("cheers", cheers);
-    const currentUser = localStorage.getItem("user_id");
-    const postObj = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token")
-      },
-      body: JSON.stringify({
-        tried_beer: {
-          user_id: currentUser,
-          beer_id: this.state.beerClicked.id
-        }
-      })
-    };
-    fetch("http://localhost:3000/tried_beers", postObj)
-      .then(resp => resp.json())
-      .then(cheers => {
-        console.log(cheers);
-        // this.setState({
-        //   cheered: cheers
-        // });
-      });
-  };
+  // handleCheers = cheers => {
+  //   console.log("cheers", cheers);
+  //   const currentUser = localStorage.getItem("user_id");
+  //   const postObj = {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json",
+  //       Authorization: "Bearer " + localStorage.getItem("token")
+  //     },
+  //     body: JSON.stringify({
+  //       tried_beer: {
+  //         user_id: currentUser,
+  //         beer_id: this.state.beerClicked.id
+  //       }
+  //     })
+  //   };
+  //   fetch("http://localhost:3000/tried_beers", postObj)
+  //     .then(resp => resp.json())
+  //     .then(cheers => {
+  //       console.log(cheers);
+  //       // this.setState({
+  //       //   cheered: cheers
+  //       // });
+  //     });
+  // };
 
   render() {
     const { beerData, accounts, current_user } = this.state;
     const { open } = this.state;
+    console.log(this.state.avatar);
     return (
       <div className="App">
         <NavBar
@@ -324,6 +336,7 @@ class App extends React.Component {
                       handleSubmit={this.handleSubmit}
                       handleChange={this.handleChange}
                       accounts={accounts}
+                      fileHandler={this.fileHandler}
                     />
                   )}
                 />
@@ -346,6 +359,7 @@ class App extends React.Component {
                     <UserProfile
                       cheered={this.state.cheered}
                       beerClicked={this.state.beerClicked}
+                      beerData={this.state.beerData}
                     />
                   )}
                 />
@@ -389,8 +403,8 @@ class App extends React.Component {
                       beerReview={this.state.beerReviews}
                       rating={this.state.rating}
                       onStarClick={this.onStarClick}
-                      handleCheers={this.handleCheers}
                       cheered={this.state.cheered}
+                      
                     />
                   )}
                 />

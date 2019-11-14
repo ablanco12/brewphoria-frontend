@@ -4,7 +4,7 @@ import { fadeInDown } from "react-animations";
 import "../Logo.css";
 
 const Bounce = styled.div`
-  animation: 4s ${keyframes`${fadeInDown}`} infinite;
+  animation: 4s ${keyframes`${fadeInDown}`};
 `;
 
 class Logo extends Component {
