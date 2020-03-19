@@ -5,7 +5,7 @@ import Logo from "./Logo";
 
 class Home extends Component {
   state = {
-    showLogin: false
+    showLogin: true
   };
 
   loginForm = () => {
