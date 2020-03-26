@@ -45,7 +45,7 @@ class App extends React.Component {
   }
 
   fetchBeers = () => {
-    fetch("http://brewphoria-api.herokuapp.com/beers")
+    fetch("https://brewphoria-api.herokuapp.com/beers")
       .then(resp => resp.json())
       .then(data => {
         const lowercase = this.state.searchInput.toLowerCase();
@@ -64,7 +64,7 @@ class App extends React.Component {
   };
 
   fetchBreweries = () => {
-    fetch("http://brewphoria-api.herokuapp.com/breweries")
+    fetch("https://brewphoria-api.herokuapp.com/breweries")
       .then(resp => resp.json())
       .then(breweryData => {
         const lowercaseBrewery = this.state.searchInput.toLowerCase();
@@ -104,7 +104,7 @@ class App extends React.Component {
     formData.append("password_confirmation", cPassword);
 
     // console.log("this is the stuff you have on form", event);
-    fetch("http://brewphoria-api.herokuapp.com/api/v1/users", {
+    fetch("https://brewphoria-api.herokuapp.com/api/v1/users", {
       method: "POST",
       headers: {
         Authorization: "Bearer"
@@ -134,7 +134,7 @@ class App extends React.Component {
         }
       })
     };
-    fetch(`http://brewphoria-api.herokuapp.com/api/v1/login`, configObj)
+    fetch(`https://brewphoria-api.herokuapp.com/api/v1/login`, configObj)
       .then(resp => resp.json())
       .then(json => {
         // this.props.history.push("/home");
@@ -194,7 +194,7 @@ class App extends React.Component {
 
   handleClickedBeer = beerID => {
     // console.log("beer Clicked", beerID);
-    fetch(`http://brewphoria-api.herokuapp.com/beers/${beerID}`)
+    fetch(`https://brewphoria-api.herokuapp.com/beers/${beerID}`)
       .then(resp => resp.json())
       .then(beer => {
         this.setState({
@@ -205,7 +205,7 @@ class App extends React.Component {
 
   handleClickedBrewery = breweryID => {
     // console.log("brewery Clicked", breweryID);
-    fetch(`http://brewphoria-api.herokuapp.com/breweries/${breweryID}`)
+    fetch(`https://brewphoria-api.herokuapp.com/breweries/${breweryID}`)
       .then(resp => resp.json())
       .then(brewery => {
         this.setState({
@@ -241,7 +241,7 @@ class App extends React.Component {
         }
       })
     };
-    fetch("http://brewphoria-api.herokuapp.com/reviews", configObj)
+    fetch("https://brewphoria-api.herokuapp.com/reviews", configObj)
       .then(resp => resp.json())
       .then(review => {
         fetch(
@@ -260,7 +260,7 @@ class App extends React.Component {
   };
 
   fetchBeersTried = () => {
-    fetch("http://brewphoria-api.herokuapp.com/reviews")
+    fetch("https://brewphoria-api.herokuapp.com/reviews")
       .then(resp => resp.json())
       .then(review => {
         this.setState({

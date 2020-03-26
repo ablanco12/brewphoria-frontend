@@ -14,7 +14,9 @@ class Review extends Component {
 
   fetchCurrentUser = () => {
     fetch(
-      `http://localhost:3000/api/v1/users/${localStorage.getItem("user_id")}`
+      `https://brewphoria-api.herokuapp.com/api/v1/users/${localStorage.getItem(
+        "user_id"
+      )}`
     )
       .then(resp => resp.json())
       .then(user => {
