@@ -194,7 +194,7 @@ class App extends React.Component {
 
   handleClickedBeer = beerID => {
     // console.log("beer Clicked", beerID);
-    fetch(`https://brewphoria-api.herokuapp.com/beers/${beerID}`)
+    fetch(`http://brewphoria-api.herokuapp.com/beers/${beerID}`)
       .then(resp => resp.json())
       .then(beer => {
         this.setState({
