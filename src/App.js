@@ -45,7 +45,7 @@ class App extends React.Component {
   }
 
   fetchBeers = () => {
-    fetch("http://localhost:3000/beers")
+    fetch("http://brewphoria-api.herokuapp.com/beers")
       .then(resp => resp.json())
       .then(data => {
         const lowercase = this.state.searchInput.toLowerCase();
@@ -64,7 +64,7 @@ class App extends React.Component {
   };
 
   fetchBreweries = () => {
-    fetch("http://localhost:3000/breweries")
+    fetch("http://brewphoria-api.herokuapp.com/breweries")
       .then(resp => resp.json())
       .then(breweryData => {
         const lowercaseBrewery = this.state.searchInput.toLowerCase();
@@ -104,7 +104,7 @@ class App extends React.Component {
     formData.append("password_confirmation", cPassword);
 
     // console.log("this is the stuff you have on form", event);
-    fetch("http://localhost:3000/api/v1/users", {
+    fetch("http://brewphoria-api.herokuapp.com/api/v1/users", {
       method: "POST",
       headers: {
         Authorization: "Bearer"
@@ -134,7 +134,7 @@ class App extends React.Component {
         }
       })
     };
-    fetch(`http://localhost:3000/api/v1/login`, configObj)
+    fetch(`http://brewphoria-api.herokuapp.com/api/v1/login`, configObj)
       .then(resp => resp.json())
       .then(json => {
         // this.props.history.push("/home");
@@ -194,7 +194,7 @@ class App extends React.Component {
 
   handleClickedBeer = beerID => {
     // console.log("beer Clicked", beerID);
-    fetch(`http://localhost:3000/beers/${beerID}`)
+    fetch(`http://brewphoria-api.herokuapp.com/beers/${beerID}`)
       .then(resp => resp.json())
       .then(beer => {
         this.setState({
@@ -205,7 +205,7 @@ class App extends React.Component {
 
   handleClickedBrewery = breweryID => {
     // console.log("brewery Clicked", breweryID);
-    fetch(`http://localhost:3000/breweries/${breweryID}`)
+    fetch(`http://brewphoria-api.herokuapp.com/breweries/${breweryID}`)
       .then(resp => resp.json())
       .then(brewery => {
         this.setState({
@@ -241,10 +241,12 @@ class App extends React.Component {
         }
       })
     };
-    fetch("http://localhost:3000/reviews", configObj)
+    fetch("http://brewphoria-api.herokuapp.com/reviews", configObj)
       .then(resp => resp.json())
       .then(review => {
-        fetch(`http://localhost:3000/beers/${this.state.beerClicked.id}`)
+        fetch(
+          `http://brewphoria-api.herokuapp.com/beers/${this.state.beerClicked.id}`
+        )
           .then(resp => resp.json())
           .then(beer => {
             // console.log(beer);
@@ -258,7 +260,7 @@ class App extends React.Component {
   };
 
   fetchBeersTried = () => {
-    fetch("http://localhost:3000/reviews")
+    fetch("http://brewphoria-api.herokuapp.com/reviews")
       .then(resp => resp.json())
       .then(review => {
         this.setState({
@@ -404,7 +406,6 @@ class App extends React.Component {
                       rating={this.state.rating}
                       onStarClick={this.onStarClick}
                       cheered={this.state.cheered}
-                      
                     />
                   )}
                 />

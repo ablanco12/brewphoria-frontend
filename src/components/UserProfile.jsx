@@ -16,7 +16,9 @@ class UserProfile extends Component {
 
   fetchCurrentUser = () => {
     fetch(
-      `http://localhost:3000/api/v1/users/${localStorage.getItem("user_id")}`
+      `https://brewphoria-api.herokuapp.com/api/v1/users/${localStorage.getItem(
+        "user_id"
+      )}`
     )
       .then(resp => resp.json())
       .then(user => {
@@ -41,7 +43,7 @@ class UserProfile extends Component {
               Welcome, {username} !
               <div>
                 <img
-                  src={`http://localhost:3000/${this.state.usersData.avatar}`}
+                  src={`http://brewphoria-api.herokuapp.com/${this.state.usersData.avatar}`}
                   alt="oh no"
                   className="profile-image"
                 />
