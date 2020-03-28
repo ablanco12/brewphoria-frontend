@@ -245,7 +245,7 @@ class App extends React.Component {
       .then(resp => resp.json())
       .then(review => {
         fetch(
-          `http://brewphoria-api.herokuapp.com/beers/${this.state.beerClicked.id}`
+          `https://brewphoria-api.herokuapp.com/beers/${this.state.beerClicked.id}`
         )
           .then(resp => resp.json())
           .then(beer => {
