@@ -274,34 +274,6 @@ class App extends React.Component {
     this.setState({ rating: nextValue });
   };
 
-  // CHEERS
-  // handleCheers = cheers => {
-  //   console.log("cheers", cheers);
-  //   const currentUser = localStorage.getItem("user_id");
-  //   const postObj = {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json",
-  //       Authorization: "Bearer " + localStorage.getItem("token")
-  //     },
-  //     body: JSON.stringify({
-  //       tried_beer: {
-  //         user_id: currentUser,
-  //         beer_id: this.state.beerClicked.id
-  //       }
-  //     })
-  //   };
-  //   fetch("http://localhost:3000/tried_beers", postObj)
-  //     .then(resp => resp.json())
-  //     .then(cheers => {
-  //       console.log(cheers);
-  //       // this.setState({
-  //       //   cheered: cheers
-  //       // });
-  //     });
-  // };
-
   render() {
     const { beerData, accounts, current_user } = this.state;
     const { open } = this.state;
