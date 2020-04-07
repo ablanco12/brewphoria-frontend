@@ -20,7 +20,6 @@ class Review extends Component {
     )
       .then(resp => resp.json())
       .then(user => {
-        console.log("one user", user);
         this.setState({
           usersData: user
         });
@@ -28,8 +27,6 @@ class Review extends Component {
   };
   render() {
     const reviews = this.props.beer.reviews ? this.props.beer.reviews : [];
-    console.log(reviews);
-    console.log(this.props.beer);
 
     const { rating } = this.props.rating;
     return (

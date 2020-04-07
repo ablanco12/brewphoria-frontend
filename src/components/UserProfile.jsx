@@ -22,17 +22,12 @@ class UserProfile extends Component {
     )
       .then(resp => resp.json())
       .then(user => {
-        console.log("one user", user); //user.beer_id
         this.setState({
           usersData: user
         });
       });
   };
   render() {
-    console.log(this.state.usersData);
-    console.log("all beers", this.props.beerData);
-    // const allBeersTried = this.props.cheered
-    // console.log(this.props);
     const username = localStorage.getItem("username");
 
     return (

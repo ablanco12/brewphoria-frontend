@@ -11,7 +11,7 @@ class BeerDetailsContainer extends Component {
     const beer = this.props.beerClicked;
     // const text = this.props.cheered ? "cheered" : "haven't cheered";
     // const label = this.props.cheered ? "CHEERED! 🍻" : "CHEERS! 🍺";
-
+    console.log("beer", beer);
     return (
       <Container>
         <Row>
